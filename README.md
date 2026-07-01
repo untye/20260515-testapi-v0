@@ -4,11 +4,26 @@ testing API (not deployed on blockchain yet)
 
 using expressJS
 
+## testing UI 
+There is a (largely AI-generated but tested) User Interface that's available if you clone the GitHub repository. 
+
+- Go to the `demo/` folder 
+- create a `.env` file similar to the `.env.example` file 
+- `docker compose -f demo-compose.yml up -d` 
+
+Then go to `localhost:8080` 
+
+Note that identities you make will only be active on the next batch (so you need to next batch) 
+
+The batches are because, while we make it impossible to link the certificate to the proof, within a time period, parties can use timestamp to link. So, we use batch issuance, so that proofs by users can hide within the batch with many other proofs. 
+
+
+
 ## Connecting to it from other containers 
 ```wget -qO- http://testapi-testapi-1:2026/```
 
 
-# Setup 
+# Development Setup 
 
 ```bash
 npm install
@@ -123,5 +138,7 @@ These are mostly endpoints to provide cryptographic utilities on the admin's sid
 
 # MAJOR TODOs 
 - use real blockchain instead of simulated  
+- use DB instead of RAM 
 - ensure JWT signing is enforced well 
+- deploy website for people to test easily 
 - when checking admin token, use challenge-response or time-gated methods 
