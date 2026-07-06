@@ -3,77 +3,196 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Untye Demo UI</title>
+  <title>Untye Demo Control Room</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <main class="page">
-    <section class="hero">
-      <p class="eyebrow">Untye Demo</p>
-      <h1>Temporary identity dashboard</h1>
-      <p class="subtext">Sign in with an OpenID JWT (for example from VoidAuth), mint temporary identities, and track whether each identity is currently active or expired.</p>
+  <main class="board">
+    <section class="lane lane-authority">
+      <header class="lane-head">
+        <div>
+          <p class="lane-kicker">Identity Authority</p>
+          <h1>Issuer controls</h1>
+        </div>
+      </header>
+
+      <section class="lane-section">
+        <div class="section-head">
+          <h2>Proof generator</h2>
+        </div>
+
+        <div class="slot-grid">
+          <div id="authorityJwtSlot" class="drop-slot" data-drop-zone="slot" data-slot-name="authority.jwt" data-accept="jwt-id">
+            <div class="slot-empty">Drop a JWT/ID here</div>
+          </div>
+          <div id="authorityTokenSlot" class="drop-slot" data-drop-zone="slot" data-slot-name="authority.token" data-accept="token-commitment">
+            <div class="slot-empty">Drop a commitment here</div>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <label for="authorityGroupInput">Group name</label>
+          <input id="authorityGroupInput" value="demo-users" />
+        </div>
+
+        <div class="field-row">
+          <label for="authorityMessageInput">Message</label>
+          <input id="authorityMessageInput" value="demo-message" />
+        </div>
+
+        <div class="field-row">
+          <label for="authorityScopeInput">Scope</label>
+          <input id="authorityScopeInput" value="demo-scope" />
+        </div>
+
+        <div class="field-row">
+          <label for="authorityNameInput">Certificate name</label>
+          <input id="authorityNameInput" value="Cert" />
+        </div>
+
+        <div class="row">
+          <button id="issueCertificateBtn" class="btn">Issue certificate</button>
+        </div>
+
+        <p id="authorityStatus" class="meta"></p>
+      </section>
+
+      <hr class="lane-divider" />
+
+      <section class="lane-section">
+        <div class="section-head">
+          <h2>Certificates</h2>
+        </div>
+
+        <p class="meta section-note">Certificates only finish being created when the current batch is locked in. Their cryptographic contents depend on the number of certificates in the same batch as part of the privacy layer.</p>
+
+        <div id="authorityCertificateTray" class="tray" data-drop-zone="tray" data-tray-name="authorityCertificates" data-accept="jwt-id,token,certificate,proof"></div>
+      </section>
+
+      <hr class="lane-divider" />
+
+      <section class="lane-section">
+        <div class="section-head">
+          <h2>Batch control</h2>
+        </div>
+
+        <div class="batch-row">
+          <div>
+            <p id="currentBatchLabel" class="batch-label">Current batch: 1</p>
+            <p id="currentRootBadge" class="meta batch-root">Root: unknown</p>
+          </div>
+          <div class="batch-actions">
+            <input id="adminTokenInput" type="password" placeholder="Admin token" />
+            <button id="nextBatchBtn" class="btn">Next batch</button>
+          </div>
+        </div>
+
+        <p id="batchStatus" class="meta"></p>
+      </section>
     </section>
 
-    <section class="panel">
-      <h2>0) Login with permanent identity</h2>
-      <label for="jwtInput">OpenID ID token (JWT)</label>
-      <textarea id="jwtInput" rows="5" placeholder="Paste your OpenID id_token JWT here"></textarea>
-      <div class="row">
-        <button id="loginBtn" class="btn">Use token</button>
-        <button id="demoTokenBtn" class="btn btn-ghost">Use demo token</button>
-      </div>
-      <p id="userSummary" class="meta"></p>
-      <p class="hint">OpenID-compatible: this demo uses the JWT sub claim as the permanent identity identifier.</p>
+    <section class="lane lane-user">
+      <header class="lane-head">
+        <div>
+          <p class="lane-kicker">User</p>
+          <h1>Inventory and aggregation</h1>
+        </div>
+      </header>
+
+      <section class="lane-section">
+        <div class="section-head">
+          <h2>Create inventory</h2>
+        </div>
+
+        <div class="row">
+          <button id="createJwtBtn" class="btn">Create JWT/ID</button>
+          <button id="createTokenBtn" class="btn btn-ghost">Generate random token</button>
+        </div>
+
+        <p id="userStatus" class="meta"></p>
+      </section>
+
+      <hr class="lane-divider" />
+
+      <section class="lane-section">
+        <div class="section-head">
+          <h2>Inventory</h2>
+          <span id="userInventoryCount" class="tag tag-muted">0 items</span>
+        </div>
+
+        <div id="userInventoryTray" class="tray" data-drop-zone="tray" data-tray-name="userInventory" data-accept="jwt-id,token,certificate,proof"></div>
+      </section>
+
+      <hr class="lane-divider" />
+
+      <section class="lane-section">
+        <div class="section-head">
+          <h2>Proof aggregation</h2>
+        </div>
+
+        <label for="proofNameInput">Proof name</label>
+        <input id="proofNameInput" value="Proof" />
+
+        <div class="slot-grid">
+          <div id="userCertificateSlot" class="drop-slot" data-drop-zone="slot" data-slot-name="user.certificate" data-accept="certificate">
+            <div class="slot-empty">Drop a certificate here</div>
+          </div>
+          <div id="userTokenSlot" class="drop-slot" data-drop-zone="slot" data-slot-name="user.token" data-accept="token">
+            <div class="slot-empty">Drop a token here</div>
+          </div>
+        </div>
+
+        <div class="row">
+          <button id="aggregateProofBtn" class="btn">Generate proof</button>
+          <button id="clearUserSlotsBtn" class="btn btn-ghost">Clear slots</button>
+        </div>
+
+        <p id="aggregationStatus" class="meta"></p>
+      </section>
+
+      <hr class="lane-divider" />
+
+      
     </section>
 
-    <section class="panel">
-      <h2>1) Identity actions</h2>
-      <label for="groupInput">Group name</label>
-      <input id="groupInput" value="demo-users" />
+    <section class="lane lane-verifier">
+      <header class="lane-head">
+        <div>
+          <p class="lane-kicker">Verifier</p>
+          <h1>Live verification</h1>
+        </div>
+      </header>
 
-      <label for="messageInput">Proof message</label>
-      <input id="messageInput" value="demo-login" />
+      <section class="lane-section">
+        <div class="section-head">
+          <h2>Proof input</h2>
+        </div>
 
-      <label for="scopeInput">Proof scope template</label>
-      <input id="scopeInput" value="scope:{group}:{sub}" />
+        <div id="verifierProofSlot" class="drop-slot" data-drop-zone="slot" data-slot-name="verifier.proof" data-accept="proof">
+          <div class="slot-empty">Drop a proof here</div>
+        </div>
 
-      <div class="row">
-        <button id="createIdentityBtn" class="btn">Create temp identity</button>
-        <button id="refreshBtn" class="btn btn-ghost">Refresh statuses</button>
-      </div>
-      <p id="actionStatus" class="meta"></p>
-    </section>
+        <div class="row">
+          <button id="verifyProofBtn" class="btn">Verify proof</button>
+          <button id="clearVerifierSlotBtn" class="btn btn-ghost">Clear slot</button>
+        </div>
 
-    <section class="panel">
-      <div class="row row-between">
-        <h2>ADMIN) Admin batch control</h2>
-        <span class="pill">manual nextbatch</span>
-      </div>
+        <p id="verifierStatus" class="meta"></p>
+        <p class="hint">The verifier checks the identity authority in real time before accepting a proof.</p>
+      </section>
 
-      <label for="adminTokenInput">Admin token</label>
-      <input id="adminTokenInput" type="password" placeholder="Enter admin token" />
+      <hr class="lane-divider" />
 
-      <label for="adminGroupInput">Group name</label>
-      <input id="adminGroupInput" value="demo-users" />
+      <section class="lane-section">
+        <div class="section-head">
+          <h2>Verification log</h2>
+        </div>
 
-      <div class="row">
-        <button id="nextBatchBtn" class="btn">Advance to next batch</button>
-        <button id="rootBtn" class="btn btn-ghost">Refresh current root</button>
-      </div>
-
-      <p id="adminStatus" class="meta"></p>
-      <p id="rootSummary" class="meta"></p>
-    </section>
-
-    <section class="panel">
-      <div class="row row-between">
-        <h2>2) Your temporary identities</h2>
-        <span id="identityCount" class="pill">0 identities</span>
-      </div>
-      <div id="identityList" class="identity-list"></div>
+        <div id="verificationLog" class="log"></div>
+      </section>
     </section>
   </main>
 

@@ -5,7 +5,7 @@ testing API (not deployed on blockchain yet)
 using expressJS
 
 ## testing UI 
-There is a (largely AI-generated but tested) User Interface that's available if you clone the GitHub repository. 
+There is a (largely AI-generated but tested) User Interface that's available if you clone the GitHub repository.
 
 - Go to the `demo/` folder 
 - create a `.env` file similar to the `.env.example` file 
@@ -13,7 +13,20 @@ There is a (largely AI-generated but tested) User Interface that's available if 
 
 Then go to `localhost:8080` 
 
-Note that identities you make will only be active on the next batch (so you need to next batch) 
+The demo UI is now split into three left-to-right lanes:
+
+- Identity authority on the left
+- User in the middle
+- Verifier on the right
+
+Terminology in the demo UI is:
+
+- JWT/ID = the permanent identity / bearer JWT
+- token = the temporary identity created from `/newidentity`
+
+All drag operations create copies only. Dragging a JWT/ID, token, certificate, or proof never removes the original from its source inventory.
+
+The authority lane issues certificates, the batch number is advanced manually, and certificates become active after the next batch. 
 
 The batches are because, while we make it impossible to link the certificate to the proof, within a time period, parties can use timestamp to link. So, we use batch issuance, so that proofs by users can hide within the batch with many other proofs. 
 
@@ -137,6 +150,7 @@ This is the method to create a group. Make a GET request to `/newgroup` with `gr
 These are mostly endpoints to provide cryptographic utilities on the admin's side, for any tracing or debugging purposes. Both these methods take the admin token and the user's identity commitment, but `getgroupidx` will take the group name while `getgroupidxwithgid` will use the groupId instead. 
 
 # MAJOR TODOs 
+- make verifier able to select which identity authority to check root commitment with?? 
 - use real blockchain instead of simulated  
 - use DB instead of RAM 
 - ensure JWT signing is enforced well 
