@@ -10,12 +10,12 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <main class="board">
+  <main class="board" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); ">
     <section class="lane lane-authority">
       <header class="lane-head">
         <div>
-          <p class="lane-kicker">Identity Authority</p>
-          <h1>Issuer controls</h1>
+          <!--<p class="lane-kicker">Identity Authority</p>-->
+          <h1>Identity Authority</h1>
         </div>
       </header>
 
@@ -97,19 +97,22 @@
     <section class="lane lane-user">
       <header class="lane-head">
         <div>
-          <p class="lane-kicker">User</p>
-          <h1>Inventory and aggregation</h1>
+          <!--<p class="lane-kicker">User</p>-->
+          <h1>User</h1>
         </div>
       </header>
 
       <section class="lane-section">
+        
+        <!--
         <div class="section-head">
           <h2>Create inventory</h2>
         </div>
+        -->
 
         <div class="row">
-          <button id="createJwtBtn" class="btn">Create JWT/ID</button>
-          <button id="createTokenBtn" class="btn btn-ghost">Generate random token</button>
+          <button id="createJwtBtn" class="btn">JWT/ID</button>
+          <button id="createTokenBtn" class="btn btn-ghost">Temp identity (token)</button>
         </div>
 
         <p id="userStatus" class="meta"></p>
@@ -161,8 +164,8 @@
     <section class="lane lane-verifier">
       <header class="lane-head">
         <div>
-          <p class="lane-kicker">Verifier</p>
-          <h1>Live verification</h1>
+          <!--<p class="lane-kicker">Verifier</p>-->
+          <h1>Verification</h1>
         </div>
       </header>
 

@@ -2,7 +2,7 @@ services:
   api:
     build:
       context: ..
-      dockerfile: demo/Dockerfile.api
+      dockerfile: Dockerfile
     container_name: untye-demo-api
     env_file:
       - .env
